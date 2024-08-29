@@ -3,12 +3,13 @@ package com.lab3_final.lab3_final.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 public class Alumno {
-    private Integer legajo;
+    private Integer idAlumno;
     private String nombre;
     private String apellido;
     private Integer dni;
@@ -18,10 +19,11 @@ public class Alumno {
     public Alumno() {
     }
 
-    public Alumno(Integer legajo, String nombre, String apellido, Integer dni) {
-        this.legajo = legajo;
+    public Alumno(Integer idAlumno, String nombre, String apellido, Integer dni) {
+        this.idAlumno = idAlumno;
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        asignaturas = new ArrayList<>();
     }
 }
