@@ -1,5 +1,7 @@
 package com.lab3_final.lab3_final.model;
 
+import com.lab3_final.lab3_final.model.exception.EstadoIncorrectoException;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +20,19 @@ public class Asignatura {
     }
 
     public Asignatura() {
+    }
+
+    public void cursarAsignatura() {
+        this.estado = EstadoAsignatura.CURSADA;
+    }
+
+    public void aprobarAsignatura(int nota) throws EstadoIncorrectoException {
+        if (!this.estado.equals(EstadoAsignatura.CURSADA)) {
+            throw new EstadoIncorrectoException("La materia debe estar cursada");
+        }
+        if (nota >= 4) {
+            this.estado = EstadoAsignatura.APROBADA;
+            this.nota = nota;
+        }
     }
 }
