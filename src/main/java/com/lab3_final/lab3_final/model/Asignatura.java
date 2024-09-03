@@ -8,12 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Asignatura {
-
+    private int asignaturaId;
     private Materia materia;
     private EstadoAsignatura estado;
     private Integer nota;
 
-    public Asignatura(Materia materia, EstadoAsignatura estado, Integer nota) {
+    public Asignatura(int asignaturaId, Materia materia, EstadoAsignatura estado, Integer nota) {
+        this.asignaturaId = asignaturaId;
         this.materia = materia;
         this.estado = estado;
         this.nota = nota;
@@ -28,7 +29,7 @@ public class Asignatura {
 
     public void aprobarAsignatura(int nota) throws EstadoIncorrectoException {
         if (!this.estado.equals(EstadoAsignatura.CURSADA)) {
-            throw new EstadoIncorrectoException("La materia debe estar cursada");
+            throw new EstadoIncorrectoException("La materia debe estar cursada para aprobar");
         }
         if (nota >= 4) {
             this.estado = EstadoAsignatura.APROBADA;

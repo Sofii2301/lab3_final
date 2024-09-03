@@ -33,10 +33,11 @@ public class ProfesorDaoImpl implements ProfesorDao {
 
     @Override
     public Profesor saveProfesor(Profesor profesor) throws ProfesorAlreadyExistsException {
-        profesor.setIdProfesor(currentId++);
-        if (repositorioProfesores.containsKey(profesor.getIdProfesor())) {
-            throw new ProfesorAlreadyExistsException("El profesor con ID " + profesor.getIdProfesor() + " ya existe.");
+        if (existsByNombreAndApellido(profesor.getNombre(), profesor.getApellido())) {
+            throw new ProfesorAlreadyExistsException(
+                    "El profesor " + profesor.getNombre() + " " + profesor.getApellido() + " ya existe.");
         }
+        profesor.setIdProfesor(currentId++);
         repositorioProfesores.put(profesor.getIdProfesor(), profesor);
         return profesor;
     }
@@ -56,5 +57,16 @@ public class ProfesorDaoImpl implements ProfesorDao {
             throw new ProfesorNotFoundException("El profesor con ID " + idProfesor + " no existe.");
         }
         repositorioProfesores.remove(idProfesor);
+    }
+
+    @Override
+    public boolean existsByNombreAndApellido(String nombre, String apellido) {
+        return repositorioProfesores.values().stream()
+                .anyMatch(profesor -> profesor.getNombre().equals(nombre) && profesor.getApellido().equals(apellido));
+    }
+
+    @Override
+    public boolean existsById(int idProfesor) {
+        return repositorioProfesores.containsKey(idProfesor);
     }
 }

@@ -15,4 +15,8 @@ public interface MateriaDao {
     List<Materia> findAllMaterias();
 
     void deleteMateriaById(int idMateria) throws MateriaNotFoundException;
+
+    boolean existsByNombreAndAnioAndCuatrimestre(String nombre, int anio, int cuatrimestre);
+
+    boolean existsById(int idMateria);
 }

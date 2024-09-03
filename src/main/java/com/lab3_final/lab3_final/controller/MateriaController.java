@@ -3,6 +3,7 @@ package com.lab3_final.lab3_final.controller;
 import com.lab3_final.lab3_final.business.MateriaService;
 import com.lab3_final.lab3_final.dto.MateriaDto;
 import com.lab3_final.lab3_final.model.Materia;
+import com.lab3_final.lab3_final.persistence.exception.CircularDependencyException;
 import com.lab3_final.lab3_final.persistence.exception.MateriaAlreadyExistsException;
 import com.lab3_final.lab3_final.persistence.exception.MateriaNotFoundException;
 import com.lab3_final.lab3_final.persistence.exception.ProfesorNotFoundException;
@@ -22,17 +23,27 @@ public class MateriaController {
     private MateriaService materiaService;
 
     @PostMapping
-    public ResponseEntity<Materia> crearMateria(@RequestBody MateriaDto materiaDto)
-            throws MateriaAlreadyExistsException, ProfesorNotFoundException {
-        Materia nuevaMateria = materiaService.crearMateria(materiaDto);
-        return new ResponseEntity<>(nuevaMateria, HttpStatus.CREATED);
+    public ResponseEntity<?> crearMateria(@RequestBody MateriaDto materiaDto) throws CircularDependencyException {
+        try {
+            Materia materia = materiaService.crearMateria(materiaDto);
+            return new ResponseEntity<>(materia, HttpStatus.CREATED);
+        } catch (MateriaAlreadyExistsException e) {
+            return new ResponseEntity<>("La materia ya existe", HttpStatus.CONFLICT);
+        } catch (ProfesorNotFoundException e) {
+            return new ResponseEntity<>("Profesor no encontrado", HttpStatus.NOT_FOUND);
+        } catch (MateriaNotFoundException e) {
+            return new ResponseEntity<>("Correlativa no encontrada", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{idMateria}")
-    public ResponseEntity<Materia> obtenerMateriaPorId(@PathVariable int idMateria)
-            throws MateriaNotFoundException {
-        Materia materia = materiaService.obtenerMateriaPorId(idMateria);
-        return new ResponseEntity<>(materia, HttpStatus.OK);
+    public ResponseEntity<?> obtenerMateriaPorId(@PathVariable int idMateria) {
+        try {
+            Materia materia = materiaService.obtenerMateriaPorId(idMateria);
+            return new ResponseEntity<>(materia, HttpStatus.OK);
+        } catch (MateriaNotFoundException e) {
+            return new ResponseEntity<>("No se encontró una materia con ese id", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping
@@ -42,9 +53,12 @@ public class MateriaController {
     }
 
     @DeleteMapping("/{idMateria}")
-    public ResponseEntity<Void> eliminarMateria(@PathVariable int idMateria)
-            throws MateriaNotFoundException {
-        materiaService.eliminarMateria(idMateria);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarMateria(@PathVariable int idMateria) {
+        try {
+            materiaService.eliminarMateria(idMateria);
+            return new ResponseEntity<>("Materia eliminada correctamente", HttpStatus.NO_CONTENT);
+        } catch (MateriaNotFoundException e) {
+            return new ResponseEntity<>("No se encontró una materia con ese id", HttpStatus.NOT_FOUND);
+        }
     }
 }

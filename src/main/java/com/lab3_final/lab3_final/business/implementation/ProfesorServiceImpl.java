@@ -29,11 +29,18 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Override
     public Profesor obtenerProfesorPorId(Integer idProfesor) throws ProfesorNotFoundException {
-        return profesorDao.findProfesorById(idProfesor);
+        Profesor profesor = profesorDao.findProfesorById(idProfesor);
+        if (profesor == null) {
+            throw new ProfesorNotFoundException("Profesor no encontrado.");
+        }
+        return profesor;
     }
 
     @Override
     public Profesor crearProfesor(ProfesorDto profesorDto) throws ProfesorAlreadyExistsException {
+        if (profesorDao.existsByNombreAndApellido(profesorDto.getNombre(), profesorDto.getApellido())) {
+            throw new ProfesorAlreadyExistsException("El profesor ya existe.");
+        }
         Profesor profesor = convertirProfesorDtoAProfesor(profesorDto);
         return profesorDao.saveProfesor(profesor);
     }
@@ -41,6 +48,9 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public Profesor modificarProfesor(int idProfesor, ProfesorDto profesorDto) throws ProfesorNotFoundException {
         Profesor profesorExistente = profesorDao.findProfesorById(idProfesor);
+        if (profesorExistente == null) {
+            throw new ProfesorNotFoundException("Profesor no encontrado.");
+        }
         profesorExistente.setNombre(profesorDto.getNombre());
         profesorExistente.setApellido(profesorDto.getApellido());
         profesorExistente.setTitulo(profesorDto.getTitulo());
@@ -49,23 +59,27 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Override
     public void eliminarProfesor(int idProfesor) throws ProfesorNotFoundException {
+        if (!profesorDao.existsById(idProfesor)) {
+            throw new ProfesorNotFoundException("Profesor no encontrado.");
+        }
         profesorDao.deleteProfesorById(idProfesor);
     }
 
     @Override
     public List<Materia> obtenerMateriasPorProfesor(int idProfesor) throws ProfesorNotFoundException {
         Profesor profesor = profesorDao.findProfesorById(idProfesor);
-        List<Materia> materias = profesor.getMateriasDictadas();
-        return materias.stream()
+        if (profesor == null) {
+            throw new ProfesorNotFoundException("Profesor no encontrado.");
+        }
+        return profesor.getMateriasDictadas().stream()
                 .sorted((m1, m2) -> m1.getNombre().compareToIgnoreCase(m2.getNombre()))
                 .collect(Collectors.toList());
     }
 
     private Profesor convertirProfesorDtoAProfesor(ProfesorDto profesorDto) {
         return new Profesor(
-            profesorDto.getNombre(),
-            profesorDto.getApellido(),
-            profesorDto.getTitulo()
-        );
+                profesorDto.getNombre(),
+                profesorDto.getApellido(),
+                profesorDto.getTitulo());
     }
 }

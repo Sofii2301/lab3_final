@@ -6,6 +6,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lab3_final.lab3_final.dto.AsignaturaDto;
+
 @Getter
 @Setter
 public class Alumno {
@@ -25,5 +27,13 @@ public class Alumno {
         this.apellido = apellido;
         this.dni = dni;
         asignaturas = new ArrayList<>();
+    }
+
+    public List<Asignatura> getAsignaturas() {
+        return asignaturas;
+    }
+
+    public void setAsignaturas(List<Asignatura> asignaturas) {
+        this.asignaturas = asignaturas;
     }
 }

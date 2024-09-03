@@ -16,12 +16,11 @@ public class MateriaDaoImpl implements MateriaDao {
 
     @Override
     public Materia saveMateria(Materia materia) throws MateriaAlreadyExistsException {
-        if (materia.getMateriaId() == 0) {
-            materia.setMateriaId(nextId++);
-        } else if (materiaMap.containsKey(materia.getMateriaId())) {
-            throw new MateriaAlreadyExistsException("Materia con ID " + materia.getMateriaId() + " ya existe.");
+        if (existsByNombreAndAnioAndCuatrimestre(materia.getNombre(), materia.getAnio(), materia.getCuatrimestre())) {
+            throw new MateriaAlreadyExistsException("Materia con nombre " + materia.getNombre() + ", año "
+                    + materia.getAnio() + " y cuatrimestre " + materia.getCuatrimestre() + " ya existe.");
         }
-
+        materia.setMateriaId(nextId++);
         materiaMap.put(materia.getMateriaId(), materia);
         return materia;
     }
@@ -46,5 +45,18 @@ public class MateriaDaoImpl implements MateriaDao {
             throw new MateriaNotFoundException("Materia con ID " + idMateria + " no encontrada.");
         }
         materiaMap.remove(idMateria);
+    }
+
+    @Override
+    public boolean existsByNombreAndAnioAndCuatrimestre(String nombre, int anio, int cuatrimestre) {
+        return materiaMap.values().stream()
+                .anyMatch(materia -> materia.getNombre().equals(nombre) &&
+                        materia.getAnio() == anio &&
+                        materia.getCuatrimestre() == cuatrimestre);
+    }
+
+    @Override
+    public boolean existsById(int idMateria) {
+        return materiaMap.containsKey(idMateria);
     }
 }

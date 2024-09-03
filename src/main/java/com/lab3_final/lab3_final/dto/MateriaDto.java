@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 public class MateriaDto {
-
+    private int materiaId;
     private String nombre;
     private int anio;
     private int cuatrimestre;
@@ -17,7 +17,9 @@ public class MateriaDto {
     public MateriaDto() {
     }
 
-    public MateriaDto(String nombre, int anio, int cuatrimestre, int profesorId, List<Integer> correlatividades) {
+    public MateriaDto(int materiaId, String nombre, int anio, int cuatrimestre, int profesorId,
+            List<Integer> correlatividades) {
+        this.materiaId = materiaId;
         this.nombre = nombre;
         this.anio = anio;
         this.cuatrimestre = cuatrimestre;

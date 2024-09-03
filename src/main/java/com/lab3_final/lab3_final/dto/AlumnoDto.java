@@ -1,6 +1,7 @@
 package com.lab3_final.lab3_final.dto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.lab3_final.lab3_final.model.Asignatura;
 
@@ -14,7 +15,7 @@ public class AlumnoDto {
     private String nombre;
     private String apellido;
     private Integer dni;
-    ArrayList<Asignatura> asignaturas = new ArrayList<>();
+    private List<Asignatura> asignaturas = new ArrayList<>();
 
     public AlumnoDto() {
     }

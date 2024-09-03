@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AlumnoDaoImpl implements AlumnoDao {
     private static final Map<Integer, Alumno> repositorioAlumnos = new HashMap<>();
-    private static final AtomicInteger idGenerator = new AtomicInteger();
+    private static final AtomicInteger idGenerator = new AtomicInteger(1);
 
     @Override
     public List<Alumno> findAllAlumnos() {
@@ -34,11 +34,11 @@ public class AlumnoDaoImpl implements AlumnoDao {
 
     @Override
     public Alumno saveAlumno(Alumno alumno) throws AlumnoAlreadyExistsException {
-        int newId = idGenerator.incrementAndGet();
-        alumno.setIdAlumno(newId);
-        if (repositorioAlumnos.containsKey(alumno.getIdAlumno())) {
-            throw new AlumnoAlreadyExistsException("El alumno con ID " + newId + " ya existe.");
+        if (repositorioAlumnos.values().stream().anyMatch(a -> a.getDni().equals(alumno.getDni()))) {
+            throw new AlumnoAlreadyExistsException("El alumno con DNI " + alumno.getDni() + " ya existe.");
         }
+        int newId = idGenerator.getAndIncrement();
+        alumno.setIdAlumno(newId);
         repositorioAlumnos.put(newId, alumno);
         return alumno;
     }

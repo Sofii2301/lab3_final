@@ -1,8 +1,7 @@
 package com.lab3_final.lab3_final.dto;
 
 import java.util.ArrayList;
-
-import com.lab3_final.lab3_final.model.Materia;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,15 +13,15 @@ public class ProfesorDto {
     private String nombre;
     private String apellido;
     private String titulo;
-
-    ArrayList<Materia> materiasDictadas = new ArrayList<>();
+    private List<MateriaDto> materiasDictadas = new ArrayList<>();
 
     public ProfesorDto() {
     }
 
-    public ProfesorDto(String nombre, String apellido, String titulo) {
+    public ProfesorDto(String nombre, String apellido, String titulo, List<MateriaDto> materiasDictadas) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.titulo = titulo;
+        this.materiasDictadas = materiasDictadas;
     }
 }
