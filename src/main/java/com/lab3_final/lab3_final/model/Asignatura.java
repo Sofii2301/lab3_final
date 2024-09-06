@@ -1,7 +1,5 @@
 package com.lab3_final.lab3_final.model;
 
-import com.lab3_final.lab3_final.model.exception.EstadoIncorrectoException;
-
 import lombok.Getter;
 import lombok.Setter;
 

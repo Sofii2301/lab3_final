@@ -32,145 +32,148 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 class ProfesorControllerTest {
 
-    @InjectMocks
-    ProfesorController profesorController;
+        @InjectMocks
+        ProfesorController profesorController;
 
-    @Mock
-    ProfesorService profesorService;
+        @Mock
+        ProfesorService profesorService;
 
-    MockMvc mockMvc;
+        MockMvc mockMvc;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+        private static ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(profesorController).build();
-    }
+        @BeforeEach
+        void setUp() {
+                this.mockMvc = MockMvcBuilders.standaloneSetup(profesorController).build();
+        }
 
-    @Test
-    void testObtenerTodosLosProfesores() throws Exception {
-        Profesor profesor = new Profesor();
-        profesor.setNombre("Carlos");
-        profesor.setApellido("Gomez");
-        profesor.setTitulo("Programador");
+        @Test
+        void testObtenerTodosLosProfesores() throws Exception {
+                Profesor profesor = new Profesor();
+                profesor.setNombre("Carlos");
+                profesor.setApellido("Gomez");
+                profesor.setTitulo("Programador");
 
-        Mockito.when(profesorService.obtenerTodosLosProfesores()).thenReturn(Collections.singletonList(profesor));
+                Mockito.when(profesorService.obtenerTodosLosProfesores())
+                                .thenReturn(Collections.singletonList(profesor));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/profesor")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
+                mockMvc.perform(MockMvcRequestBuilders.get("/profesor")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andReturn();
+        }
 
-    @Test
-    void testObtenerProfesorPorId() throws Exception {
-        Profesor profesor = new Profesor();
-        profesor.setIdProfesor(1);
-        profesor.setNombre("Carlos");
-        profesor.setApellido("Gomez");
+        @Test
+        void testObtenerProfesorPorId() throws Exception {
+                Profesor profesor = new Profesor();
+                profesor.setIdProfesor(1);
+                profesor.setNombre("Carlos");
+                profesor.setApellido("Gomez");
 
-        Mockito.when(profesorService.obtenerProfesorPorId(1)).thenReturn(profesor);
+                Mockito.when(profesorService.obtenerProfesorPorId(1)).thenReturn(profesor);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/profesor/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/profesor/1")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        Profesor response = mapper.readValue(result.getResponse().getContentAsString(), Profesor.class);
-        assertEquals(profesor.getIdProfesor(), response.getIdProfesor());
-    }
+                Profesor response = mapper.readValue(result.getResponse().getContentAsString(), Profesor.class);
+                assertEquals(profesor.getIdProfesor(), response.getIdProfesor());
+        }
 
-    @Test
-    void testObtenerProfesorPorIdNotFound() throws Exception {
-        Mockito.when(profesorService.obtenerProfesorPorId(1))
-                .thenThrow(new ProfesorNotFoundException("No se encontró un profesor con ese id"));
+        @Test
+        void testObtenerProfesorPorIdNotFound() throws Exception {
+                Mockito.when(profesorService.obtenerProfesorPorId(1))
+                                .thenThrow(new ProfesorNotFoundException("No se encontró un profesor con ese id"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/profesor/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
+                mockMvc.perform(MockMvcRequestBuilders.get("/profesor/1")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    void testCrearProfesor() throws Exception {
-        ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
-        Profesor profesor = new Profesor("Carlos", "Gomez", "Programador");
+        @Test
+        void testCrearProfesor() throws Exception {
+                ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
+                Profesor profesor = new Profesor("Carlos", "Gomez", "Programador");
 
-        Mockito.when(profesorService.crearProfesor(any(ProfesorDto.class))).thenReturn(profesor);
+                Mockito.when(profesorService.crearProfesor(any(ProfesorDto.class))).thenReturn(profesor);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/profesor")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(profesorDto))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/profesor")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(profesorDto))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isCreated())
+                                .andReturn();
 
-        assertEquals(mapper.writeValueAsString(profesor), result.getResponse().getContentAsString());
-    }
+                assertEquals(mapper.writeValueAsString(profesor), result.getResponse().getContentAsString());
+        }
 
-    @Test
-    void testModificarProfesor() throws Exception {
-        ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
-        Profesor profesorActualizado = new Profesor("Carlos", "Gomez", "Programador");
+        @Test
+        void testModificarProfesor() throws Exception {
+                ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
+                Profesor profesorActualizado = new Profesor("Carlos", "Gomez", "Programador");
 
-        Mockito.when(profesorService.modificarProfesor(eq(1), any(ProfesorDto.class))).thenReturn(profesorActualizado);
+                Mockito.when(profesorService.modificarProfesor(eq(1), any(ProfesorDto.class)))
+                                .thenReturn(profesorActualizado);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/profesor/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(profesorDto))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/profesor/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(profesorDto))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        Profesor response = mapper.readValue(result.getResponse().getContentAsString(), Profesor.class);
-        assertEquals(profesorActualizado.getIdProfesor(), response.getIdProfesor());
-    }
+                Profesor response = mapper.readValue(result.getResponse().getContentAsString(), Profesor.class);
+                assertEquals(profesorActualizado.getIdProfesor(), response.getIdProfesor());
+        }
 
-    @Test
-    void testModificarProfesorNotFound() throws Exception {
-        ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
+        @Test
+        void testModificarProfesorNotFound() throws Exception {
+                ProfesorDto profesorDto = new ProfesorDto("Carlos", "Gomez", "Programador", Collections.emptyList());
 
-        Mockito.when(profesorService.modificarProfesor(any(Integer.class), any(ProfesorDto.class)))
-                .thenThrow(new ProfesorNotFoundException("No se encontró un profesor con ese id"));
+                Mockito.when(profesorService.modificarProfesor(any(Integer.class), any(ProfesorDto.class)))
+                                .thenThrow(new ProfesorNotFoundException("No se encontró un profesor con ese id"));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/profesor/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(profesorDto))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
+                mockMvc.perform(MockMvcRequestBuilders.put("/profesor/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(profesorDto))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    void testEliminarProfesor() throws Exception {
-        Mockito.doNothing().when(profesorService).eliminarProfesor(1);
+        @Test
+        void testEliminarProfesor() throws Exception {
+                Mockito.doNothing().when(profesorService).eliminarProfesor(1);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/profesor/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-    }
+                mockMvc.perform(MockMvcRequestBuilders.delete("/profesor/1")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNoContent());
+        }
 
-    @Test
-    void testEliminarProfesorNotFound() throws Exception {
-        Mockito.doThrow(new ProfesorNotFoundException("Profesor no encontrado")).when(profesorService)
-                .eliminarProfesor(1);
+        @Test
+        void testEliminarProfesorNotFound() throws Exception {
+                Mockito.doThrow(new ProfesorNotFoundException("Profesor no encontrado")).when(profesorService)
+                                .eliminarProfesor(1);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/profesor/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
+                mockMvc.perform(MockMvcRequestBuilders.delete("/profesor/1")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    void testObtenerMateriasPorProfesor() throws Exception {
-        Materia materia = new Materia();
-        materia.setNombre("Física");
+        @Test
+        void testObtenerMateriasPorProfesor() throws Exception {
+                Materia materia = new Materia();
+                materia.setNombre("Física");
 
-        Mockito.when(profesorService.obtenerMateriasPorProfesor(1)).thenReturn(Collections.singletonList(materia));
+                Mockito.when(profesorService.obtenerMateriasPorProfesor(1))
+                                .thenReturn(Collections.singletonList(materia));
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/profesor/materias/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/profesor/materias/1")
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        List<Materia> response = mapper.readValue(result.getResponse().getContentAsString(), List.class);
-        assertEquals(1, response.size());
-    }
+                List<Materia> response = mapper.readValue(result.getResponse().getContentAsString(), List.class);
+                assertEquals(1, response.size());
+        }
 }

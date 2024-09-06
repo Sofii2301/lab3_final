@@ -4,7 +4,6 @@ import com.lab3_final.lab3_final.business.ProfesorService;
 import com.lab3_final.lab3_final.dto.ProfesorDto;
 import com.lab3_final.lab3_final.model.Profesor;
 import com.lab3_final.lab3_final.model.Materia;
-import com.lab3_final.lab3_final.persistence.exception.AlumnoNotFoundException;
 import com.lab3_final.lab3_final.persistence.exception.ProfesorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

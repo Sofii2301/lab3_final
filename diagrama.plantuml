@@ -1,0 +1,186 @@
+@startuml sistema_universitario
+
+' Definición de las clases de modelo
+class Alumno {
+    - Integer idAlumno
+    - String nombre
+    - String apellido
+    - Integer dni
+    - List<Asignatura> asignaturas
+}
+
+class Asignatura {
+    - int asignaturaId
+    - Materia materia
+    - EstadoAsignatura estado
+    - Integer nota
+}
+
+class Materia {
+    - int materiaId
+    - String nombre
+    - int anio
+    - int cuatrimestre
+    - int profesorId
+    - List<Integer> correlatividades
+}
+
+class Profesor {
+    - int idProfesor
+    - String nombre
+    - String apellido
+    - String titulo
+    - List<Materia> materiasDictadas
+}
+
+enum EstadoAsignatura {
+    NO_CURSADA
+    CURSADA
+    APROBADA
+}
+
+' Clases DTO
+class AlumnoDto {
+    - Integer idAlumno
+    - String nombre
+    - String apellido
+    - Integer dni
+    - List<AsignaturaDto> asignaturas
+}
+
+class AsignaturaDto {
+    - EstadoAsignatura estado
+    - Integer nota
+    - Integer materiaId
+}
+
+class MateriaDto {
+    - Integer materiaId
+    - String nombre
+    - int anio
+    - int cuatrimestre
+    - int profesorId
+    - List<Integer> correlatividades
+}
+
+class ProfesorDto {
+    - String nombre
+    - String apellido
+    - String titulo
+    - List<MateriaDto> materiasDictadas
+}
+
+' Clases de Servicios (Services)
+class AlumnoService {
+    + obtenerAlumnoPorId(Integer idAlumno)
+    + crearAlumno(AlumnoDto alumnoDto)
+    + actualizarAlumno(AlumnoDto alumnoDto, Integer idAlumno)
+    + eliminarAlumno(Integer idAlumno)
+    + modificarEstadoAsignatura(int idAlumno, int idAsignatura, EstadoAsignatura nuevoEstado, Integer nota)
+    + agregarAsignatura(int idAlumno, AsignaturaDto asignaturaDto)
+}
+
+class MateriaService {
+    + crearMateria(MateriaDto materiaDto)
+    + obtenerMateria(Integer materiaId)
+    + obtenerTodasLasMaterias()
+    + eliminarMateria(int idMateria)
+}
+
+class ProfesorService {
+    + obtenerTodosLosProfesores()
+    + obtenerProfesorPorId(Integer idProfesor)
+    + crearProfesor(ProfesorDto profesorDto)
+    + modificarProfesor(int idProfesor, ProfesorDto profesorDto)
+    + eliminarProfesor(int idProfesor)
+    + obtenerMateriasPorProfesor(int idProfesor)
+}
+
+' Clases de DAO
+class AlumnoDao {
+    + findAllAlumnos()
+    + findAlumnoById(Integer idAlumno)
+    + saveAlumno(Alumno alumno)
+    + updateAlumno(Alumno alumno)
+    + deleteAlumnoById(Integer idAlumno)
+}
+
+class MateriaDao {
+    + saveMateria(Materia materia)
+    + findMateriaById(Integer idMateria)
+    + findAllMaterias()
+    + deleteMateriaById(int idMateria)
+    + existsByNombreAndAnioAndCuatrimestreAndProfesor(String nombre, int anio, int cuatrimestre, int idProfesor)
+    + existsById(int idMateria)
+}
+
+class ProfesorDao {
+    + findAllProfesores()
+    + saveProfesor(Profesor profesor)
+    + findProfesorById(Integer idProfesor)
+    + updateProfesor(Profesor profesor)
+    + deleteProfesorById(int idProfesor)
+    + existsById(int idProfesor)
+}
+
+' Clases de Controladores
+class AlumnoController {
+    + obtenerTodosLosAlumnos()
+    + obtenerAlumnoPorId(Integer idAlumno)
+    + crearAlumno(AlumnoDto alumnoDto)
+    + actualizarAlumno(Integer idAlumno, AlumnoDto alumnoDto)
+    + eliminarAlumno(Integer idAlumno)
+    + agregarAsignatura(int idAlumno, AsignaturaDto asignaturaDto)
+    + modificarEstadoAsignatura(int idAlumno, int idAsignatura, AsignaturaDto asignaturaDto)
+
+}
+
+class MateriaController {
+    + crearMateria(MateriaDto materiaDto)
+    + obtenerMateriaPorId(Integer materiaId)
+    + obtenerTodasLasMaterias()
+    + eliminarMateria(int idMateria)
+}
+
+class ProfesorController {
+    + obtenerTodosLosProfesores()
+    + crearProfesor(ProfesorDto profesorDto)
+    + obtenerProfesorPorId(Integer profesorId)
+    + modificarProfesor(int idProfesor, ProfesorDto profesorDto)
+    + eliminarProfesor(int idProfesor)
+    + obtenerMateriasPorProfesor(int idProfesor)
+}
+
+' Relaciones entre las clases
+Alumno *-- Asignatura : "asignaturas"
+Asignatura --> Materia
+AlumnoDto *-- AsignaturaDto : "asignaturas"
+Asignatura --> EstadoAsignatura
+AsignaturaDto --> EstadoAsignatura
+AsignaturaDto --> MateriaDto
+Materia *-- Profesor : "profesorId"
+Profesor *-- Materia : "materiasDictadas"
+Materia *-- Materia : "correlatividades"
+
+AlumnoController --> AlumnoService
+AlumnoService --> AlumnoDao
+AlumnoDao --> Alumno
+
+AlumnoController --> AlumnoDto
+AlumnoService --> AlumnoDto
+
+MateriaController --> MateriaService
+MateriaService --> MateriaDao
+MateriaDao --> Materia
+
+MateriaController --> MateriaDto
+MateriaService --> MateriaDto
+
+ProfesorController --> ProfesorService
+ProfesorService --> ProfesorDao
+ProfesorDao --> Profesor
+
+ProfesorController --> ProfesorDto
+ProfesorService --> ProfesorDto
+
+@enduml
