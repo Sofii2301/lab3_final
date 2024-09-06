@@ -5,7 +5,6 @@ import com.lab3_final.lab3_final.dto.ProfesorDto;
 import com.lab3_final.lab3_final.model.Profesor;
 import com.lab3_final.lab3_final.model.Materia;
 import com.lab3_final.lab3_final.persistence.ProfesorDao;
-import com.lab3_final.lab3_final.persistence.exception.ProfesorAlreadyExistsException;
 import com.lab3_final.lab3_final.persistence.exception.ProfesorNotFoundException;
 
 import org.springframework.stereotype.Service;
@@ -37,10 +36,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     }
 
     @Override
-    public Profesor crearProfesor(ProfesorDto profesorDto) throws ProfesorAlreadyExistsException {
-        if (profesorDao.existsByNombreAndApellido(profesorDto.getNombre(), profesorDto.getApellido())) {
-            throw new ProfesorAlreadyExistsException("El profesor ya existe.");
-        }
+    public Profesor crearProfesor(ProfesorDto profesorDto) {
         Profesor profesor = convertirProfesorDtoAProfesor(profesorDto);
         return profesorDao.saveProfesor(profesor);
     }

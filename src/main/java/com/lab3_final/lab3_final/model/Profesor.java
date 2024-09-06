@@ -14,7 +14,7 @@ public class Profesor {
     private String apellido;
     private String titulo;
 
-    private List<Materia> materiasDictadas;
+    private List<Materia> materiasDictadas = new ArrayList<>();
 
     public Profesor() {
         this.materiasDictadas = new ArrayList<>();
@@ -25,5 +25,13 @@ public class Profesor {
         this.apellido = apellido;
         this.titulo = titulo;
         this.materiasDictadas = new ArrayList<>();
+    }
+
+    public List<Materia> getMateriasDictadas() {
+        return materiasDictadas;
+    }
+
+    public void setMateriasDictadas(List<Materia> materiasDictadas) {
+        this.materiasDictadas = materiasDictadas;
     }
 }

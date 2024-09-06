@@ -2,7 +2,6 @@ package com.lab3_final.lab3_final.persistence.implementation;
 
 import com.lab3_final.lab3_final.model.Profesor;
 import com.lab3_final.lab3_final.persistence.ProfesorDao;
-import com.lab3_final.lab3_final.persistence.exception.ProfesorAlreadyExistsException;
 import com.lab3_final.lab3_final.persistence.exception.ProfesorNotFoundException;
 
 import org.springframework.stereotype.Repository;
@@ -32,11 +31,7 @@ public class ProfesorDaoImpl implements ProfesorDao {
     }
 
     @Override
-    public Profesor saveProfesor(Profesor profesor) throws ProfesorAlreadyExistsException {
-        if (existsByNombreAndApellido(profesor.getNombre(), profesor.getApellido())) {
-            throw new ProfesorAlreadyExistsException(
-                    "El profesor " + profesor.getNombre() + " " + profesor.getApellido() + " ya existe.");
-        }
+    public Profesor saveProfesor(Profesor profesor) {
         profesor.setIdProfesor(currentId++);
         repositorioProfesores.put(profesor.getIdProfesor(), profesor);
         return profesor;
@@ -57,12 +52,6 @@ public class ProfesorDaoImpl implements ProfesorDao {
             throw new ProfesorNotFoundException("El profesor con ID " + idProfesor + " no existe.");
         }
         repositorioProfesores.remove(idProfesor);
-    }
-
-    @Override
-    public boolean existsByNombreAndApellido(String nombre, String apellido) {
-        return repositorioProfesores.values().stream()
-                .anyMatch(profesor -> profesor.getNombre().equals(nombre) && profesor.getApellido().equals(apellido));
     }
 
     @Override

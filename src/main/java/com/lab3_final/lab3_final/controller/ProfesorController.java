@@ -4,8 +4,8 @@ import com.lab3_final.lab3_final.business.ProfesorService;
 import com.lab3_final.lab3_final.dto.ProfesorDto;
 import com.lab3_final.lab3_final.model.Profesor;
 import com.lab3_final.lab3_final.model.Materia;
+import com.lab3_final.lab3_final.persistence.exception.AlumnoNotFoundException;
 import com.lab3_final.lab3_final.persistence.exception.ProfesorNotFoundException;
-import com.lab3_final.lab3_final.persistence.exception.ProfesorAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class ProfesorController {
     }
 
     @GetMapping("/{idProfesor}")
-    public ResponseEntity<?> obtenerProfesorPorId(@PathVariable Integer idProfesor) {
+    public ResponseEntity<?> obtenerProfesorPorId(@PathVariable Integer idProfesor) throws ProfesorNotFoundException {
         try {
             Profesor profesor = profesorService.obtenerProfesorPorId(idProfesor);
             return new ResponseEntity<>(profesor, HttpStatus.OK);
@@ -37,30 +37,41 @@ public class ProfesorController {
     }
 
     @PostMapping
-    public ResponseEntity<Profesor> crearProfesor(@RequestBody ProfesorDto profesorDto)
-            throws ProfesorAlreadyExistsException {
+    public ResponseEntity<Profesor> crearProfesor(@RequestBody ProfesorDto profesorDto) {
         Profesor nuevoProfesor = profesorService.crearProfesor(profesorDto);
         return new ResponseEntity<>(nuevoProfesor, HttpStatus.CREATED);
     }
 
     @PutMapping("/{idProfesor}")
-    public ResponseEntity<Profesor> modificarProfesor(@PathVariable int idProfesor,
+    public ResponseEntity<?> modificarProfesor(@PathVariable int idProfesor,
             @RequestBody ProfesorDto profesorDto)
             throws ProfesorNotFoundException {
-        Profesor profesorModificado = profesorService.modificarProfesor(idProfesor, profesorDto);
-        return new ResponseEntity<>(profesorModificado, HttpStatus.OK);
+        try {
+            Profesor profesorModificado = profesorService.modificarProfesor(idProfesor, profesorDto);
+            return new ResponseEntity<>(profesorModificado, HttpStatus.OK);
+        } catch (ProfesorNotFoundException e) {
+            return new ResponseEntity<>("No se encontró un alumno con ese id", HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{idProfesor}")
-    public ResponseEntity<Void> eliminarProfesor(@PathVariable int idProfesor) throws ProfesorNotFoundException {
-        profesorService.eliminarProfesor(idProfesor);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarProfesor(@PathVariable int idProfesor) throws ProfesorNotFoundException {
+        try {
+            profesorService.eliminarProfesor(idProfesor);
+            return new ResponseEntity<>("Profesor eliminado correctamente", HttpStatus.NO_CONTENT);
+        } catch (ProfesorNotFoundException e) {
+            return new ResponseEntity<>("No se encontró un alumno con ese id", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/materias/{idProfesor}")
-    public ResponseEntity<List<Materia>> obtenerMateriasPorProfesor(@PathVariable int idProfesor)
+    public ResponseEntity<?> obtenerMateriasPorProfesor(@PathVariable int idProfesor)
             throws ProfesorNotFoundException {
-        List<Materia> materias = profesorService.obtenerMateriasPorProfesor(idProfesor);
-        return new ResponseEntity<>(materias, HttpStatus.OK);
+        try {
+            List<Materia> materias = profesorService.obtenerMateriasPorProfesor(idProfesor);
+            return new ResponseEntity<>(materias, HttpStatus.OK);
+        } catch (ProfesorNotFoundException e) {
+            return new ResponseEntity<>("No se encontró un alumno con ese id", HttpStatus.NOT_FOUND);
+        }
     }
 }
