@@ -32,8 +32,8 @@ public class MateriaServiceImpl implements MateriaService {
             throws ProfesorNotFoundException, MateriaAlreadyExistsException, MateriaNotFoundException,
             CircularDependencyException {
         // Verificar si ya existe una materia con el mismo nombre, año y cuatrimestre
-        if (materiaDao.existsByNombreAndAnioAndCuatrimestre(materiaDto.getNombre(), materiaDto.getAnio(),
-                materiaDto.getCuatrimestre())) {
+        if (materiaDao.existsByNombreAndAnioAndCuatrimestreAndProfesor(materiaDto.getNombre(), materiaDto.getAnio(),
+                materiaDto.getCuatrimestre(), materiaDto.getProfesorId())) {
             throw new MateriaAlreadyExistsException("La materia ya existe.");
         }
 

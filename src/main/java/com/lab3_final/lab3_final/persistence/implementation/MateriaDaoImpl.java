@@ -16,7 +16,8 @@ public class MateriaDaoImpl implements MateriaDao {
 
     @Override
     public Materia saveMateria(Materia materia) throws MateriaAlreadyExistsException {
-        if (existsByNombreAndAnioAndCuatrimestre(materia.getNombre(), materia.getAnio(), materia.getCuatrimestre())) {
+        if (existsByNombreAndAnioAndCuatrimestreAndProfesor(materia.getNombre(), materia.getAnio(),
+                materia.getCuatrimestre(), materia.getProfesorId())) {
             throw new MateriaAlreadyExistsException("Materia con nombre " + materia.getNombre() + ", año "
                     + materia.getAnio() + " y cuatrimestre " + materia.getCuatrimestre() + " ya existe.");
         }
@@ -48,11 +49,13 @@ public class MateriaDaoImpl implements MateriaDao {
     }
 
     @Override
-    public boolean existsByNombreAndAnioAndCuatrimestre(String nombre, int anio, int cuatrimestre) {
+    public boolean existsByNombreAndAnioAndCuatrimestreAndProfesor(String nombre, int anio, int cuatrimestre,
+            int idProfesor) {
         return materiaMap.values().stream()
                 .anyMatch(materia -> materia.getNombre().equals(nombre) &&
                         materia.getAnio() == anio &&
-                        materia.getCuatrimestre() == cuatrimestre);
+                        materia.getCuatrimestre() == cuatrimestre &&
+                        materia.getProfesorId() == idProfesor);
     }
 
     @Override

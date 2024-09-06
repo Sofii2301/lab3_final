@@ -16,10 +16,9 @@ public class Materia {
     private int cuatrimestre;
     private int profesorId;
 
-    private List<Integer> correlatividades;
+    private List<Integer> correlatividades = new ArrayList<>();
 
     public Materia() {
-        correlatividades = new ArrayList<>();
     }
 
     public Materia(Integer materiaId, String nombre, int anio, int cuatrimestre, int profesorId) {
@@ -28,7 +27,13 @@ public class Materia {
         this.cuatrimestre = cuatrimestre;
         this.nombre = nombre;
         this.profesorId = profesorId;
+    }
 
-        correlatividades = new ArrayList<>();
+    public List<Integer> getCorrelatividades() {
+        return correlatividades;
+    }
+
+    public void setCorrelatividades(List<Integer> correlatividades) {
+        this.correlatividades = correlatividades;
     }
 }

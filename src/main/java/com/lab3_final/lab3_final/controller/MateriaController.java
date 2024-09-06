@@ -23,7 +23,7 @@ public class MateriaController {
     private MateriaService materiaService;
 
     @PostMapping
-    public ResponseEntity<?> crearMateria(@RequestBody MateriaDto materiaDto) throws CircularDependencyException {
+    public ResponseEntity<?> crearMateria(@RequestBody MateriaDto materiaDto) {
         try {
             Materia materia = materiaService.crearMateria(materiaDto);
             return new ResponseEntity<>(materia, HttpStatus.CREATED);
@@ -33,6 +33,8 @@ public class MateriaController {
             return new ResponseEntity<>("Profesor no encontrado", HttpStatus.NOT_FOUND);
         } catch (MateriaNotFoundException e) {
             return new ResponseEntity<>("Correlativa no encontrada", HttpStatus.NOT_FOUND);
+        } catch (CircularDependencyException e) {
+            return new ResponseEntity<>("Dos materias no pueden ser correlativas una de otra.", HttpStatus.CONFLICT);
         }
     }
 

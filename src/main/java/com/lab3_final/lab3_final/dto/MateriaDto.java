@@ -2,6 +2,8 @@ package com.lab3_final.lab3_final.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,7 +14,7 @@ public class MateriaDto {
     private int anio;
     private int cuatrimestre;
     private int profesorId;
-    private List<Integer> correlatividades;
+    private List<Integer> correlatividades = new ArrayList<>();
 
     public MateriaDto() {
     }

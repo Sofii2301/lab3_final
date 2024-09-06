@@ -16,7 +16,7 @@ public interface MateriaDao {
 
     void deleteMateriaById(int idMateria) throws MateriaNotFoundException;
 
-    boolean existsByNombreAndAnioAndCuatrimestre(String nombre, int anio, int cuatrimestre);
+    boolean existsByNombreAndAnioAndCuatrimestreAndProfesor(String nombre, int anio, int cuatrimestre, int idProfesor);
 
     boolean existsById(int idMateria);
 }

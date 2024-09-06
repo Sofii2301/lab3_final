@@ -20,9 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,7 +62,7 @@ class AlumnoControllerTest {
 
                 Mockito.when(alumnoService.obtenerTodosLosAlumnos()).thenReturn(Collections.singletonList(alumno));
 
-                MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/alumno")
+                mockMvc.perform(MockMvcRequestBuilders.get("/alumno")
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
                                 .andReturn();
