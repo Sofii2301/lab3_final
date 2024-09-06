@@ -6,8 +6,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lab3_final.lab3_final.dto.AsignaturaDto;
-
 @Getter
 @Setter
 public class Alumno {

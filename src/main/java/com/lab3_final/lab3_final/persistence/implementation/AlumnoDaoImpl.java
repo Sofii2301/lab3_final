@@ -34,6 +34,9 @@ public class AlumnoDaoImpl implements AlumnoDao {
 
     @Override
     public Alumno saveAlumno(Alumno alumno) throws AlumnoAlreadyExistsException {
+        if (alumno.getDni() == null) {
+            throw new IllegalArgumentException("El DNI del alumno no puede ser nulo.");
+        }
         if (repositorioAlumnos.values().stream().anyMatch(a -> a.getDni().equals(alumno.getDni()))) {
             throw new AlumnoAlreadyExistsException("El alumno con DNI " + alumno.getDni() + " ya existe.");
         }
@@ -58,5 +61,10 @@ public class AlumnoDaoImpl implements AlumnoDao {
             throw new AlumnoNotFoundException("El alumno con ID " + idAlumno + " no existe.");
         }
         repositorioAlumnos.remove(idAlumno);
+    }
+
+    public void clearRepository() {
+        repositorioAlumnos.clear();
+        idGenerator.set(1);
     }
 }

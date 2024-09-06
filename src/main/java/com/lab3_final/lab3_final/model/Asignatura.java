@@ -22,18 +22,4 @@ public class Asignatura {
 
     public Asignatura() {
     }
-
-    public void cursarAsignatura() {
-        this.estado = EstadoAsignatura.CURSADA;
-    }
-
-    public void aprobarAsignatura(int nota) throws EstadoIncorrectoException {
-        if (!this.estado.equals(EstadoAsignatura.CURSADA)) {
-            throw new EstadoIncorrectoException("La materia debe estar cursada para aprobar");
-        }
-        if (nota >= 4) {
-            this.estado = EstadoAsignatura.APROBADA;
-            this.nota = nota;
-        }
-    }
 }

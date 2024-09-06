@@ -16,19 +16,19 @@ import com.lab3_final.lab3_final.persistence.exception.AsignaturaNotFoundExcepti
 import com.lab3_final.lab3_final.persistence.exception.MateriaNotFoundException;
 
 public interface AlumnoService {
-    List<Alumno> obtenerTodosLosAlumnos();
+        List<Alumno> obtenerTodosLosAlumnos();
 
-    Alumno obtenerAlumnoPorId(Integer idAlumno) throws AlumnoNotFoundException;
+        Alumno obtenerAlumnoPorId(Integer idAlumno) throws AlumnoNotFoundException;
 
-    Alumno crearAlumno(AlumnoDto alumnoDto) throws AlumnoAlreadyExistsException;
+        Alumno crearAlumno(AlumnoDto alumnoDto) throws AlumnoAlreadyExistsException;
 
-    Alumno actualizarAlumno(AlumnoDto alumnoDto, Integer idAlumno) throws AlumnoNotFoundException;
+        Alumno actualizarAlumno(AlumnoDto alumnoDto, Integer idAlumno) throws AlumnoNotFoundException;
 
-    void eliminarAlumno(Integer idAlumno) throws AlumnoNotFoundException;
+        void eliminarAlumno(Integer idAlumno) throws AlumnoNotFoundException;
 
-    Asignatura modificarEstadoAsignatura(int idAlumno, int idAsignatura, EstadoAsignatura nuevoEstado, Integer nota)
-            throws AlumnoNotFoundException, AsignaturaNotFoundException, EstadoIncorrectoException;
+        Asignatura modificarEstadoAsignatura(int idAlumno, int idAsignatura, EstadoAsignatura nuevoEstado, Integer nota)
+                        throws AlumnoNotFoundException, AsignaturaNotFoundException, EstadoIncorrectoException;
 
-    Asignatura agregarAsignatura(int idAlumno, AsignaturaDto asignaturaDto)
-            throws AlumnoNotFoundException, MateriaNotFoundException, AsignaturaAlreadyExistsException;
+        Asignatura agregarAsignatura(int idAlumno, AsignaturaDto asignaturaDto)
+                        throws AlumnoNotFoundException, MateriaNotFoundException, AsignaturaAlreadyExistsException;
 }

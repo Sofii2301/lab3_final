@@ -42,7 +42,13 @@ public class AlumnoServiceImpl implements AlumnoService {
 
     @Override
     public Alumno obtenerAlumnoPorId(Integer idAlumno) throws AlumnoNotFoundException {
-        return alumnoDao.findAlumnoById(idAlumno);
+        Alumno alumno = alumnoDao.findAlumnoById(idAlumno);
+
+        if (alumno == null) {
+            throw new AlumnoNotFoundException("Alumno no encontrado con id: " + idAlumno);
+        }
+
+        return alumno;
     }
 
     @Override
@@ -53,12 +59,17 @@ public class AlumnoServiceImpl implements AlumnoService {
 
     @Override
     public Alumno actualizarAlumno(AlumnoDto alumnoDto, Integer idAlumno) throws AlumnoNotFoundException {
-        Alumno alumnoExistente = alumnoDao.findAlumnoById(idAlumno);
-        alumnoExistente.setNombre(alumnoDto.getNombre());
-        alumnoExistente.setApellido(alumnoDto.getApellido());
-        alumnoExistente.setDni(alumnoDto.getDni());
-        alumnoExistente.setAsignaturas(alumnoDto.getAsignaturas());
-        return alumnoDao.updateAlumno(alumnoExistente);
+        Alumno alumno = alumnoDao.findAlumnoById(idAlumno);
+
+        if (alumno == null) {
+            throw new AlumnoNotFoundException("Alumno no encontrado con id: " + idAlumno);
+        }
+
+        alumno.setNombre(alumnoDto.getNombre());
+        alumno.setApellido(alumnoDto.getApellido());
+        alumno.setDni(alumnoDto.getDni());
+        alumno.setAsignaturas(alumnoDto.getAsignaturas());
+        return alumnoDao.updateAlumno(alumno);
     }
 
     @Override
@@ -122,12 +133,16 @@ public class AlumnoServiceImpl implements AlumnoService {
                 .orElseThrow(() -> new AsignaturaNotFoundException(
                         "Asignatura con ID " + idAsignatura + " no encontrada para el alumno con ID " + idAlumno));
 
+        if (nuevoEstado == null) {
+            throw new EstadoIncorrectoException("Estado no válido para la asignatura.");
+        }
+
         switch (nuevoEstado) {
             case CURSADA:
                 if (nota != null) {
                     throw new EstadoIncorrectoException("Si una asignatura esta CURSADA no debe tener nota.");
                 }
-                asignatura.cursarAsignatura();
+                asignatura.setEstado(nuevoEstado);
                 asignatura.setNota(null);
                 break;
             case APROBADA:
@@ -137,8 +152,12 @@ public class AlumnoServiceImpl implements AlumnoService {
                 if (nota < 4) {
                     throw new NotaInvalidaException("Para aprobar una asignatura, la nota debe ser mayor que 4.");
                 }
+                if (asignatura.getEstado() != EstadoAsignatura.CURSADA) {
+                    throw new EstadoIncorrectoException("La materia debe estar cursada para aprobar");
+                }
                 verificarCorrelatividades(alumno, asignatura.getMateria());
-                asignatura.aprobarAsignatura(nota);
+                asignatura.setEstado(nuevoEstado);
+                asignatura.setNota(nota);
                 break;
             case NO_CURSADA:
                 if (nota != null) {

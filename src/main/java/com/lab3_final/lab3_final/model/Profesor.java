@@ -26,14 +26,4 @@ public class Profesor {
         this.titulo = titulo;
         this.materiasDictadas = new ArrayList<>();
     }
-
-    @Override
-    public String toString() {
-        return "Profesor{" +
-                "idProfesor=" + idProfesor +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", titulo='" + titulo + '\'' +
-                '}';
-    }
 }
